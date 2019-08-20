@@ -61,17 +61,17 @@ if __name__ == '__main__':
         for t in range(NUM_STEPS):
             if is_learned:
                 epsilon = 0
+                if cnt == 0:
+                    env.render()
+                    time.sleep(0.01)
+            elif episode%100 == 0:
                 env.render()
-                time.sleep(0.1)
+                time.sleep(0.01)
 
             observation, reward, done, info = env.step(action)
             if done:
                 if t < NUM_STEPS-1:
                     reward = -200
-                else:
-                    reward = 1
-            else:
-                reward = 1
             total_reward += reward
 
             next_state = digitized_state(observation)
@@ -81,12 +81,20 @@ if __name__ == '__main__':
 
             if done:
                 if is_learned:
-                    is_done = True
+                    cnt = cnt + 1
+                    avg_step = (avg_step+t+1)/2
+                    if cnt > 100:
+                        print("Consecutive last 100 steps avg is {}".format(avg_step))
+                        is_done = True
+
                 reward_rambda = total_reward*0.25 + reward_rambda*0.75
                 print("Episode {0} finished after {1} timesteps with reward {2}".format(episode,t+1, total_reward))
-                if(reward_rambda > 199.9):
-                    print("Learned!")
-                    is_learned = True
+                if(reward_rambda > 199.99):
+                    if is_learned == False:
+                        print("Learned!")
+                        cnt = 0
+                        avg_step = t+1
+                        is_learned = True
                 break
 
     print("END")
