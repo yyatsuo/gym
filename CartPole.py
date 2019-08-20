@@ -84,17 +84,18 @@ if __name__ == '__main__':
                     cnt = cnt + 1
                     avg_step = (avg_step+t+1)/2
                     if cnt > 100:
-                        print("Consecutive last 100 steps avg is {}".format(avg_step))
+                        print("Consecutive 100 steps avg is {}".format(avg_step))
                         is_done = True
 
-                reward_rambda = total_reward*0.25 + reward_rambda*0.75
-                print("Episode {0} finished after {1} timesteps with reward {2}".format(episode,t+1, total_reward))
-                if(reward_rambda > 199.99):
-                    if is_learned == False:
-                        print("Learned!")
-                        cnt = 0
-                        avg_step = t+1
-                        is_learned = True
+                else:
+                    reward_rambda = total_reward*0.25 + reward_rambda*0.75
+                    print("Episode {0} finished after {1} timesteps with reward {2}".format(episode,t+1, total_reward))
+                    if(reward_rambda > 199.99):
+                        if is_learned == False:
+                            print("Learned!")
+                            cnt = 0
+                            avg_step = t+1
+                            is_learned = True
                 break
 
     print("END")
